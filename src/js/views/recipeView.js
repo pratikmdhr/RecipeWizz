@@ -6,61 +6,18 @@ class RecipeView extends View {
   _parentElement = document.querySelector('.recipe');
   _errorMessage = `This recipe couldn't be found, please try another one!`;
   _message = ``;
-  // _data;
-  // render(data) {
-  //   this._data = data;
-  //   const markup = this._generateMarkup();
-  //   this._clear();
-  //   this._parentElement.insertAdjacentHTML('afterbegin', markup);
-  // }
-
-  // _clear() {
-  //   this._parentElement.innerHTML = '';
-  // }
-
-  // test(msg) {
-  //   console.log(msg);
-  // }
-  // renderSpinner() {
-  //   const markup = `<div class="spinner">
-  //   <svg>
-  //     <use href="${icons}#icon-loader"></use>
-  //   </svg>
-  // </div>`;
-  //   this._clear();
-  //   this._parentElement.insertAdjacentHTML('afterbegin', markup);
-  // }
-
-  // renderError(message = this._errorMessage) {
-  //   const markup = `
-  //           <div class="error"><div>
-  //           <svg>
-  //             <use href="${icons}#icon-alert-triangle"></use>
-  //           </svg>
-  //           </div>
-  //             <p>${message}</p>
-  //           </div>
-  //           `;
-  //   this._clear();
-  //   this._parentElement.insertAdjacentHTML('afterbegin', markup);
-  // }
-
-  // renderMessage(message = this._message) {
-  //   const markup = `
-  //           <div class="message"><div>
-  //           <svg>
-  //             <use href="${icons}#icon-smile"></use>
-  //           </svg>
-  //           </div>
-  //             <p>${message}</p>
-  //           </div>
-  //           `;
-  //   this._clear();
-  //   this._parentElement.insertAdjacentHTML('afterbegin', markup);
-  // }
 
   addHandlerRender(handler) {
     ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
+  }
+
+  addHandlerUpdateServings(handler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--tiny');
+      if (!btn) return;
+      const { updateTo } = btn.dataset;
+      if (+updateTo > 0) handler(+updateTo);
+    });
   }
 
   _generateMarkup() {
@@ -93,12 +50,16 @@ class RecipeView extends View {
       <span class="recipe__info-text">servings</span>
 
       <div class="recipe__info-buttons">
-        <button class="btn--tiny btn--increase-servings">
+        <button class="btn--tiny btn--update-servings" data-update-to="${
+          this._data.servings - 1
+        }">
           <svg>
             <use href="${icons}#icon-minus-circle"></use>
           </svg>
         </button>
-        <button class="btn--tiny btn--increase-servings">
+        <button class="btn--tiny btn--update-servings" data-update-to="${
+          this._data.servings + 1
+        }">
           <svg>
             <use href="${icons}#icon-plus-circle"></use>
           </svg>
