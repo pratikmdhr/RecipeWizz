@@ -543,7 +543,6 @@ const controlAddRecipe = async function(newRecipe) {
         _addRecipeViewJsDefault.default.renderSpinner();
         // Upload new recipe data
         await _modelJs.uploadRecipe(newRecipe);
-        console.log(_modelJs.state.recipe);
         //  Render Recipe
         _recipeViewJsDefault.default.render(_modelJs.state.recipe);
         // Success message
@@ -553,9 +552,7 @@ const controlAddRecipe = async function(newRecipe) {
         // Change ID in URL
         window.history.pushState(null, '', `#${_modelJs.state.recipe.id}`);
         // CLose form window
-        setTimeout(function() {
-            _addRecipeViewJsDefault.default.toggleWindow();
-        }, _configJs.MODAL_CLOSE_SEC * 1000);
+        _addRecipeViewJsDefault.default.messageTimeout(_configJs.MODAL_CLOSE_SEC);
     } catch (err) {
         console.log('🧨', err);
         _addRecipeViewJsDefault.default.renderError(err.message);
@@ -13948,10 +13945,17 @@ class AddRecipeView extends _viewJsDefault.default {
         this._window.classList.toggle('hidden');
     }
     _addHandlerShowWindow() {
-        this._btnOpen.addEventListener('click', this.toggleWindow.bind(this));
+        this._btnOpen.addEventListener('click', ()=>{
+            this._clear();
+            const markup = this._generateMarkup();
+            this._parentElement.insertAdjacentHTML('afterbegin', markup);
+            this.toggleWindow();
+        });
     }
     _addHandlerHideWindow() {
-        this._btnClose.addEventListener('click', this.toggleWindow.bind(this));
+        this._btnClose.addEventListener('click', ()=>{
+            this.toggleWindow();
+        });
     }
     addHandlerUpload(handler) {
         this._parentElement.addEventListener('submit', function(e) {
@@ -13963,7 +13967,16 @@ class AddRecipeView extends _viewJsDefault.default {
             handler(data);
         });
     }
+    messageTimeout(time) {
+        setTimeout(()=>{
+            if (!this._overlay.classList.contains('hidden') && !this._window.classList.contains('hidden')) {
+                this._overlay.classList.remove('hidden');
+                this._window.classList.remove('hidden');
+            }
+        }, time * 1000);
+    }
     _generateMarkup() {
+        return `\n    <div class="upload__column">\n          <h3 class="upload__heading">Recipe data</h3>\n          <label>Title</label>\n          <input value="Batman Pizza" required name="title" type="text" />\n          <label>URL</label>\n          <input value="batman.asdasd" required name="sourceUrl" type="text" />\n          <label>Image URL</label>\n          <input value="batman" required name="image" type="text" />\n          <label>Publisher</label>\n          <input value="batman" required name="publisher" type="text" />\n          <label>Prep time</label>\n          <input value="22" required name="cookingTime" type="number" />\n          <label>Servings</label>\n          <input value="2" required name="servings" type="number" />\n        </div>\n\n        <div class="upload__column">\n          <h3 class="upload__heading">Ingredients</h3>\n          <label>Ingredient 1</label>\n          <input\n            value="0.5,kg,Rice"\n            type="text"\n            required\n            name="ingredient-1"\n            placeholder="Format: 'Quantity,Unit,Description'"\n          />\n          <label>Ingredient 2</label>\n          <input\n            value="1,,Avocado"\n            type="text"\n            name="ingredient-2"\n            placeholder="Format: 'Quantity,Unit,Description'"\n          />\n          <label>Ingredient 3</label>\n          <input\n            value=",,salt"\n            type="text"\n            name="ingredient-3"\n            placeholder="Format: 'Quantity,Unit,Description'"\n          />\n          <label>Ingredient 4</label>\n          <input\n            type="text"\n            name="ingredient-4"\n            placeholder="Format: 'Quantity,Unit,Description'"\n          />\n          <label>Ingredient 5</label>\n          <input\n            type="text"\n            name="ingredient-5"\n            placeholder="Format: 'Quantity,Unit,Description'"\n          />\n          <label>Ingredient 6</label>\n          <input\n            type="text"\n            name="ingredient-6"\n            placeholder="Format: 'Quantity,Unit,Description'"\n          />\n        </div>\n\n        <button class="btn upload__btn">\n          <svg>\n            <use href="${_iconsSvgDefault.default}#icon-upload-cloud"></use>\n          </svg>\n          <span>Upload</span>\n        </button>`;
     }
 }
 exports.default = new AddRecipeView();
