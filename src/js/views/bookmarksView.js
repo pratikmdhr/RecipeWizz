@@ -12,6 +12,7 @@ class BookmarksView extends View {
 
   _generateMarkup() {
     return this._data
+    // render set to false, so that it will return a string which will be joined with .join method
       .map(bookmark => PreviewView.render(bookmark, false))
       .join('');
   }

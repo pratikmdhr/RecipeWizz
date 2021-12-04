@@ -38,6 +38,7 @@ export default class View {
       // Updates changed TEXT
       if (
         !newEl.isEqualNode(curEl) &&
+        // checks only for a text node
         newEl.firstChild?.nodeValue.trim() !== ''
       ) {
         // console.log(newEl, newEl.isEqualNode(curEl));

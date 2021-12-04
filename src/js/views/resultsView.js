@@ -7,6 +7,7 @@ class ResultsView extends View {
   _message = ``;
 
   _generateMarkup() {
+    // render set to false, so that it will return a string which will be joined with .join method
     return this._data.map(result => PreviewView.render(result, false)).join('');
   }
 }
