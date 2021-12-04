@@ -14,25 +14,26 @@ export const state = {
 };
 
 const createRecipeObject = function (data) {
-  const { recipe } = data.data;
+  // const { recipe } = data.data;
   return {
-    id: recipe.id,
-    title: recipe.title,
-    publisher: recipe.publisher,
-    sourceUrl: recipe.source_url,
-    image: recipe.image_url,
-    servings: recipe.servings,
-    cookingTime: recipe.cooking_time,
-    ingredients: recipe.ingredients,
-    ...(recipe.key && { key: recipe.key }),
+    id: data.id,
+    title: data.title,
+    publisher: data.sourceName,
+    sourceUrl: data.sourceUrl,
+    image: data.image,
+    servings: data.servings,
+    cookingTime: data.readyInMinutes,
+    ingredients: data.extendedIngredients,
+    ...(data.key && { key: data.key }),
   };
 };
 
 export const loadRecipe = async function (id) {
   try {
-    const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
-
+    const data = await AJAX(`${API_URL}${id}/information?apiKey=${KEY}`);
+    console.log(data);
     state.recipe = createRecipeObject(data);
+    console.log(state.recipe);
     if (state.bookmarks.some(bookmark => bookmark.id === id)) {
       state.recipe.bookmarked = true;
     } else state.recipe.bookmarked = false;
@@ -45,14 +46,17 @@ export const loadRecipe = async function (id) {
 export const loadSearchResults = async function (query) {
   try {
     state.search.query = query;
-    const data = await AJAX(API_URL + `?search=${query}&key=${KEY}`);
-    state.search.results = data.data.recipes.map(rec => {
+    const data = await AJAX(
+      API_URL +
+        `complexSearch?apiKey=${KEY}&query=${query}&number=30&addRecipeNutrition=true`
+    );
+    state.search.results = data.results.map(rec => {
       return {
         id: rec.id,
         title: rec.title,
-        publisher: rec.publisher,
-        image: rec.image_url,
-        ...(rec.key && { key: rec.key }),
+        publisher: rec.sourceName,
+        image: rec.image,
+        // ...(rec.key && { key: rec.key }),
       };
     });
     state.search.page = 1;
@@ -71,7 +75,7 @@ export const getSearchResultsPage = function (page = state.search.page) {
 
 export const updateServings = function (newServings) {
   state.recipe.ingredients.forEach(ing => {
-    ing.quantity = (ing.quantity * newServings) / state.recipe.servings;
+    ing.amount = (ing.amount * newServings) / state.recipe.servings;
   });
   state.recipe.servings = newServings;
 };

@@ -571,25 +571,27 @@ const state = {
     bookmarks: []
 };
 const createRecipeObject = function(data) {
-    const { recipe  } = data.data;
+    // const { recipe } = data.data;
     return {
-        id: recipe.id,
-        title: recipe.title,
-        publisher: recipe.publisher,
-        sourceUrl: recipe.source_url,
-        image: recipe.image_url,
-        servings: recipe.servings,
-        cookingTime: recipe.cooking_time,
-        ingredients: recipe.ingredients,
-        ...recipe.key && {
-            key: recipe.key
+        id: data.id,
+        title: data.title,
+        publisher: data.sourceName,
+        sourceUrl: data.sourceUrl,
+        image: data.image,
+        servings: data.servings,
+        cookingTime: data.readyInMinutes,
+        ingredients: data.extendedIngredients,
+        ...data.key && {
+            key: data.key
         }
     };
 };
 const loadRecipe = async function(id) {
     try {
-        const data = await _helpersJs.AJAX(`${_configJs.API_URL}${id}?key=${_configJs.KEY}`);
+        const data = await _helpersJs.AJAX(`${_configJs.API_URL}${id}/information?apiKey=${_configJs.KEY}`);
+        console.log(data);
         state.recipe = createRecipeObject(data);
+        console.log(state.recipe);
         if (state.bookmarks.some((bookmark)=>bookmark.id === id
         )) state.recipe.bookmarked = true;
         else state.recipe.bookmarked = false;
@@ -601,16 +603,13 @@ const loadRecipe = async function(id) {
 const loadSearchResults = async function(query) {
     try {
         state.search.query = query;
-        const data = await _helpersJs.AJAX(_configJs.API_URL + `?search=${query}&key=${_configJs.KEY}`);
-        state.search.results = data.data.recipes.map((rec)=>{
+        const data = await _helpersJs.AJAX(_configJs.API_URL + `complexSearch?apiKey=${_configJs.KEY}&query=${query}&number=30&addRecipeNutrition=true`);
+        state.search.results = data.results.map((rec)=>{
             return {
                 id: rec.id,
                 title: rec.title,
-                publisher: rec.publisher,
-                image: rec.image_url,
-                ...rec.key && {
-                    key: rec.key
-                }
+                publisher: rec.sourceName,
+                image: rec.image
             };
         });
         state.search.page = 1;
@@ -627,7 +626,7 @@ const getSearchResultsPage = function(page = state.search.page) {
 };
 const updateServings = function(newServings) {
     state.recipe.ingredients.forEach((ing)=>{
-        ing.quantity = ing.quantity * newServings / state.recipe.servings;
+        ing.amount = ing.amount * newServings / state.recipe.servings;
     });
     state.recipe.servings = newServings;
 };
@@ -1252,10 +1251,10 @@ parcelHelpers.export(exports, "KEY", ()=>KEY
 );
 parcelHelpers.export(exports, "MODAL_CLOSE_SEC", ()=>MODAL_CLOSE_SEC
 );
-const API_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes/';
+const API_URL = 'https://api.spoonacular.com/recipes/';
 const TIMEOUT_SEC = 5;
 const RES_PER_PAGE = 10;
-const KEY = 'caf4016d-7218-4fb0-a541-52e6bf7eceb1';
+const KEY = '4459e90625d5424a97d128138ee95636';
 const MODAL_CLOSE_SEC = 2.5;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
@@ -1358,7 +1357,7 @@ class RecipeView extends _viewJsDefault.default {
         ).join('')}\n    </ul>\n  </div>\n\n  <div class="recipe__directions">\n    <h2 class="heading--2">How to cook it</h2>\n    <p class="recipe__directions-text">\n      This recipe was carefully designed and tested by\n      <span class="recipe__publisher">${this._data.publisher}</span>. Please check out\n      directions at their website.\n    </p>\n    <a\n      class="btn--small recipe__btn"\n      href="${this._data.sourceUrl}"\n      target="_blank"\n    >\n      <span>Directions</span>\n      <svg class="search__icon">\n        <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>\n      </svg>\n    </a>\n  </div>`;
     }
     _generateMarkupIngredient(ing) {
-        return `<li class="recipe__ingredient">\n    <svg class="recipe__icon">\n      <use href="${_iconsSvgDefault.default}#icon-check"></use>\n    </svg>\n    <div class="recipe__quantity">${ing.quantity ? new _fractional.Fraction(ing.quantity).toString() : ''}</div>\n    <div class="recipe__description">\n      <span class="recipe__unit">${ing.unit}</span>\n      ${ing.description}\n    </div>\n  </li>\n    `;
+        return `<li class="recipe__ingredient">\n    <svg class="recipe__icon">\n      <use href="${_iconsSvgDefault.default}#icon-check"></use>\n    </svg>\n    <div class="recipe__quantity">${ing.amount ? new _fractional.Fraction(ing.amount).toString() : ''}</div>\n    <div class="recipe__description">\n      <span class="recipe__unit">${ing.measures.us.unitShort}</span>\n      ${ing.name}\n    </div>\n  </li>\n    `;
     }
 }
 exports.default = new RecipeView();
