@@ -4,11 +4,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 3rem;
 
   &__logo {
-    margin-left: 4rem;
+    margin-right: 2rem;
     height: 4.6rem;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > * {
+      padding-right: 1rem;
+    }
   }
 }
 
@@ -17,7 +24,7 @@
   border-radius: 10rem;
   display: flex;
   align-items: center;
-  padding-left: 3rem;
+  padding-left: 2rem;
   transition: all 0.3s;
 
   &:focus-within {
@@ -43,6 +50,7 @@
 
     @media only screen and (max-width: $bp-medium) {
       width: auto;
+      max-width: 10rem;
 
       &::placeholder {
         color: white;
@@ -57,17 +65,20 @@
 }
 
 .nav {
-  align-self: stretch;
-  margin-right: 2.5rem;
-
+  height: 100%;
+  margin-left: 2rem;
   &__list {
     list-style: none;
     display: flex;
+    align-items: center;
     height: 100%;
+    padding: 0;
+    margin: 0;
   }
 
   &__item {
     position: relative;
+    height: 100%;
   }
 
   &__btn {
@@ -80,7 +91,6 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0 1.5rem;
     transition: all 0.3s;
 
     display: flex;
@@ -107,7 +117,7 @@
 .bookmarks {
   padding: 1rem 0;
   position: absolute;
-  // right: 0;
+  top: 10rem;
   right: -2.5rem;
   z-index: 10;
   width: 40rem;
