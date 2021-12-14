@@ -6,6 +6,11 @@
   justify-content: space-between;
   padding: 0 3rem;
 
+  @media only screen and (max-width: $bp-small) {
+    padding: 2rem;
+    flex-wrap: wrap;
+  }
+
   &__logo {
     margin-right: 2rem;
     height: 4.6rem;
@@ -13,8 +18,20 @@
     align-items: center;
     justify-content: center;
 
+    &__text {
+      font-size: 2.5rem;
+    }
+
+    @media only screen and (max-width: $bp-small) {
+      margin: 1rem 0;
+      flex-basis: 100%;
+    }
+
     & > * {
       padding-right: 1rem;
+      // @media only screen and (max-width: $bp-small) {
+      //   padding-right: 0rem;
+      // }
     }
   }
 }
@@ -50,11 +67,17 @@
 
     @media only screen and (max-width: $bp-medium) {
       width: auto;
-      max-width: 10rem;
+      max-width: 25rem;
+    }
 
-      &::placeholder {
-        color: white;
-      }
+    @media only screen and (max-width: $bp-small) {
+      width: auto;
+      max-width: 30rem;
+    }
+
+    @media only screen and (max-width: $bp-smallest) {
+      width: auto;
+      max-width: 14rem;
     }
   }
 
@@ -67,6 +90,9 @@
 .nav {
   height: 100%;
   margin-left: 2rem;
+  @media only screen and (max-width: $bp-smallest) {
+    margin-left: 0;
+  }
   &__list {
     list-style: none;
     display: flex;
@@ -128,6 +154,18 @@
   opacity: 0;
   transition: all 0.5s 0.2s;
 
+  &__show {
+    @media only screen and (max-width: $bp-medium) {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  @media only screen and (max-width: $bp-small) {
+    top: 5.5rem;
+    width: 35rem;
+  }
+
   &__list {
     list-style: none;
   }
@@ -148,7 +186,9 @@
 
   &:hover,
   .nav__btn--bookmarks:hover + & {
-    visibility: visible;
-    opacity: 1;
+    @media only screen and (min-width: $bp-medium-one) {
+      visibility: visible;
+      opacity: 1;
+    }
   }
 }

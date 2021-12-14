@@ -9,6 +9,15 @@ import bookmarksView from './views/bookmarksView.js';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
+const controlMobileRouteToResults = () => {
+  recipeView.hideForMobile();
+  resultsView.showForMobile();
+};
+
+const controlMobileRouteToRecipe = () => {
+  recipeView.showForMobile();
+  resultsView.hideForMobile();
+};
 
 const controlRecipe = async function () {
   try {
@@ -25,6 +34,7 @@ const controlRecipe = async function () {
 
     // 2. Rendering
     recipeView.render(model.state.recipe);
+    controlMobileRouteToRecipe();
   } catch (err) {
     recipeView.renderError();
   }
@@ -46,6 +56,7 @@ const controlSearchResults = async function () {
 
     // Render initial pagination button
     paginationView.render(model.state.search);
+    controlMobileRouteToResults();
   } catch (err) {
     console.log(err);
   }
@@ -86,11 +97,21 @@ const controlBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
+const controlToggleBookmarksView = function (el) {
+  el.classList.toggle('bookmarks__show');
+};
+const controlCloseBookmarksView = function (el) {
+  el.classList.remove('bookmarks__show');
+};
+
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
+  bookmarksView.addHandlerCloseBookmarks(controlCloseBookmarksView);
+  bookmarksView.addHandlerBookmarksBtn(controlToggleBookmarksView);
   recipeView.addHandlerRender(controlRecipe);
   recipeView.addHandlerUpdateServings(controlServings);
   recipeView.addHandlerAddBookmark(controlAddBookmark);
+  recipeView.backButtonHandler(controlMobileRouteToResults);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
 };

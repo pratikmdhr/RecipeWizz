@@ -1,5 +1,5 @@
 {
-  "name": "forkify",
+  "name": "recipe-wizz",
   "version": "1.0.0",
   "description": "Recipe app",
   "default": "index.html",
@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "core-js": "^3.18.2",
-    "fractional": "^1.0.0",
     "regenerator-runtime": "^0.13.9"
   }
 }
