@@ -1273,7 +1273,7 @@ parcelHelpers.export(exports, "MODAL_CLOSE_SEC", ()=>MODAL_CLOSE_SEC
 const API_URL = 'https://api.spoonacular.com/recipes/';
 const TIMEOUT_SEC = 5;
 const RES_PER_PAGE = 10;
-const KEY = '1014ec8d193a43cdb1b788254f6fdec1 ';
+const KEY = '4459e90625d5424a97d128138ee95636';
 const MODAL_CLOSE_SEC = 2.5;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
@@ -1416,7 +1416,7 @@ class RecipeView extends _viewJsDefault.default {
         ).join('')}\n    </ul>\n  </div>\n\n  <div class="recipe__directions">\n    <h2 class="heading--2">How to cook it</h2>\n    <p class="recipe__directions-text">\n      This recipe was carefully designed and tested by\n      <span class="recipe__publisher">${this._data.publisher}</span>. Please check out\n      directions at their website.\n    </p>\n    <a\n      class="btn--small recipe__btn"\n      href="${this._data.sourceUrl}"\n      target="_blank"\n    >\n      <span>Directions</span>\n      <svg class="search__icon">\n        <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>\n      </svg>\n    </a>\n  </div>`;
     }
     _generateMarkupIngredient(ing) {
-        return `<li class="recipe__ingredient">\n    <svg class="recipe__icon">\n      <use href="${_iconsSvgDefault.default}#icon-check"></use>\n    </svg>\n    <div class="recipe__quantity">${ing.amount ? _helpers.numberToFraction(ing.amount).toString() : ''}</div>\n    <div class="recipe__description">\n      <span class="recipe__unit">${ing.measures.us.unitShort}</span>\n      ${ing.name}\n    </div>\n  </li>\n    `;
+        return `<li class="recipe__ingredient">\n    <svg class="recipe__icon">\n      <use href="${_iconsSvgDefault.default}#icon-check"></use>\n    </svg>\n    <div class="recipe__quantity">${ing.amount ? _helpers.numberToFraction((Math.ceil(ing.amount * 4) / 4).toFixed(2)).toString() : ''}</div>\n    <div class="recipe__description">\n      <span class="recipe__unit">${ing.measures.us.unitShort}</span>\n      ${ing.name}\n    </div>\n  </li>\n    `;
     }
 }
 exports.default = new RecipeView();

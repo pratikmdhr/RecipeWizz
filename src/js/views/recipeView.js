@@ -146,7 +146,11 @@ class RecipeView extends View {
       <use href="${icons}#icon-check"></use>
     </svg>
     <div class="recipe__quantity">${
-      ing.amount ? numberToFraction(ing.amount).toString() : ''
+      ing.amount
+        ? numberToFraction(
+            (Math.ceil(ing.amount * 4) / 4).toFixed(2)
+          ).toString()
+        : ''
     }</div>
     <div class="recipe__description">
       <span class="recipe__unit">${ing.measures.us.unitShort}</span>
